@@ -38,14 +38,16 @@ images.get('/', (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     //concatenate image path
     const imagePath = process.env.IMAGES_FOLDER_PATH;
     const imageUrl = imagePath + imageName + '.jpg';
-    const imagePathResize = path_1.default.join(`imageUrl-${imageWidth}-${imageHeight}.jpg`);
+    const imageResizeName = path_1.default.join(`${imageName}-${imageWidth}-${imageHeight}.jpg`);
+    let imageResizePath = imagePath + imageResizeName;
     try {
-        const imageExists = yield (0, utils_1.fileExists)(imagePathResize);
+        const imageExists = yield (0, utils_1.fileExists)(imageResizePath);
         if (!imageExists) {
-            const originalImagePath = path_1.default.join('path/to/original/', imageUrl); // Replace with your original image path
-            yield (0, utils_1.resizeImage)(originalImagePath, imageWidth, imageHeight, imagePathResize);
+            const originalImagePath = imageUrl; // Replace with your original image path
+            yield (0, utils_1.resizeImage)(originalImagePath, imageWidth, imageHeight, imageResizePath);
         }
-        res.sendFile(imagePathResize);
+        imageResizePath = '/../../.' + imageResizePath;
+        res.sendFile(path_1.default.join(__dirname, imageResizePath));
     }
     catch (error) {
         console.error('Error processing image:', error);
